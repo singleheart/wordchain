@@ -1,0 +1,18 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+
+{% if latest_question_list %}
+	<p>ID {{ user.username }}</p>
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'game:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+    <form method="post" action="{% url 'django.contrib.auth.views.logout' %}">
+    	{% csrf_token %}
+		<input type="submit" value="logout" />    
+	</form>
+{% else %}
+    <p>No games are available.</p>
+{% endif %}

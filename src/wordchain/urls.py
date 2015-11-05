@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from decorator_include import decorator_include
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^game/', decorator_include(login_required, 'game.urls', namespace='game')),
+    url(r'^admin/', login_required, admin.site.urls),
     url(r'^accounts/', include('django.contrib.auth.urls')),
 ]
