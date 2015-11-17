@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 
+from .models import Score
 
 # Create your views here.
 
@@ -9,8 +10,12 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """
-        Return the last five published questions (not including those set to be
-        published in the future).
-        """
         return
+    
+class ScoreView(generic.ListView):
+    template_name = 'game/scoreboard.html'
+    context_object_name = 'Score'
+    
+    def get_queryset(self):
+        return Score.objects
+    

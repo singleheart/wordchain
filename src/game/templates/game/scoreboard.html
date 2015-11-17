@@ -1,0 +1,9 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+
+<ul>
+{% for score in Score.all %}
+    <li>{{ score.userId }} {{ score.score }} {{ score.updateDate }}</li>
+{% endfor %}
+</ul>
