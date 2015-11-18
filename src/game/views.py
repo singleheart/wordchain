@@ -17,5 +17,5 @@ class ScoreView(generic.ListView):
     context_object_name = 'Score'
     
     def get_queryset(self):
-        return Score.objects
+        return Score.objects.order_by('-score')
     
