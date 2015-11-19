@@ -6,7 +6,7 @@
     </head>
     <body>
         {% for history in History.all %}
-            <p>{{ history.text }} {{ history.userId }} {{ history.updateDate }}</p>
+            <p>{{ history.text }} {{ history.userId }} {{ history.updateDate|date:'Y-m-d H:i:s' }}</p>
         {% endfor %}
         <form method="post" action="{% url 'game:form' %}">
             {% csrf_token %}

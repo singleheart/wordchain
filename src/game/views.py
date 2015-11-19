@@ -30,27 +30,14 @@ class ScoreView(generic.ListView):
         return Score.objects.order_by('-score')
     
 def get_name(request):
-#    # if this is a POST request we need to process the form data
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-#        # create a form instance and populate it with data from the request:
-#        form = forms.Form(request.POST)
-#        # check whether it's valid:
-#        if form.is_valid():
-#            # process the data in form.cleaned_data as required
-#            # ...
-#            # redirect to a new URL:
-#            
-#            return HttpResponseRedirect('play')
-#
-#    # if a GET (or any other method) we'll create a blank form
-        pk=request.POST['answer']
-        # print(pk)
-        p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now())[:-3]);
-        p.save();
-    
-        return HttpResponseRedirect('play')    
+        pk = request.POST['answer']
+        p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now()))
+        p.save()
 
+        return HttpResponseRedirect('play')
+        
+    # if a GET (or any other method) we'll create a blank form
     else:
-        form = forms.Form
-
-    return render(request, 'play.html', {'form': form})
+        return render(request, 'play.html', {'form': forms.Form})
