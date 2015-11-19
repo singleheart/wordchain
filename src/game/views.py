@@ -29,12 +29,12 @@ class ScoreView(generic.ListView):
         return Score.objects.order_by('-score')
     
 def get_name(request):
-        pk=request.POST['answer']
-        # print(pk)
-        p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now())[:-3]);
-        p.save();
-        
-        return HttpResponseRedirect('play')    
+    pk=request.POST['answer']
+    # print(pk)
+    p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now())[:-3]);
+    p.save();
+    
+    return HttpResponseRedirect('play')    
     
 #    # if this is a POST request we need to process the form data
 #    if request.method == 'POST':
