@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+    </head>
+    <body>
+        {% for history in History.all %}
+            <p>{{ history.text }} {{ history.userId }} {{ history.updateDate }}</p>
+        {% endfor %}
+        <form method="post" action="{% url 'game:form' %}">
+            {% csrf_token %}
+            <input type="text" name="answer"/>
+            <input type="submit" name="Submit"/>
+        </form>
+    </body>
+</html>
+
+
