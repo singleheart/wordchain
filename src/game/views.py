@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django import forms
 from django.http import HttpResponseRedirect
+import datetime
 
 from .models import History, Score
 
@@ -29,15 +30,8 @@ class ScoreView(generic.ListView):
         return Score.objects.order_by('-score')
     
 def get_name(request):
-    pk=request.POST['answer']
-    # print(pk)
-    p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now())[:-3]);
-    p.save();
-    
-    return HttpResponseRedirect('play')    
-    
 #    # if this is a POST request we need to process the form data
-#    if request.method == 'POST':
+    if request.method == 'POST':
 #        # create a form instance and populate it with data from the request:
 #        form = forms.Form(request.POST)
 #        # check whether it's valid:
@@ -47,8 +41,15 @@ def get_name(request):
 #            # redirect to a new URL:
 #            
 #            return HttpResponseRedirect('play')
+#
+#    # if a GET (or any other method) we'll create a blank form
+        pk=request.POST['answer']
+        # print(pk)
+        p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now())[:-3]);
+        p.save();
+    
+        return HttpResponseRedirect('play')    
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = forms.Form
 
