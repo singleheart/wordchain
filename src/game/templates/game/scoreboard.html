@@ -36,6 +36,18 @@
                 text-anchor: middle;
                 font-size: 13px;
             }
+            
+            div.tooltip {
+              position: absolute;	
+              text-align: center;	
+              width: 100px;	
+              height: 28px;		
+              padding: 2px;	
+              font: 12px sans-serif;	
+              background: lightsteelblue;	
+              border: 0px;					
+              border-radius: 8px;
+            }
         </style>
     </head>
     <body>
@@ -62,19 +74,44 @@
             var ulBody = d3.select("body");
             ulBody.append("h2").text("-- SCORE --");
             
+            // http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
+            // Define 'div' for tooltips
+            var div = d3.select("body")
+            	.append("div")  // declare the tooltip div 
+            	.attr("class", "tooltip")              // apply the 'tooltip' class
+            	.style("opacity", 0);                  // set the opacity to nil
             
             var svg = ulBody.append("svg");
             var barGroup = svg.append("g")
                 .attr("transform", translateText + " " + scaleText)
                 .attr("class", "bar");
                 
+            var mouseCheck = 0;
+            
             barGroup.selectAll("rect").data(dataScore)
                 .enter().append("rect")
                 .attr("x",0)
                 .attr("y", function(d,i) {return i*barSpacing})
                 .attr("width", function(d) {return d})
-                .attr("height", barHeight);
-                
+                .attr("height", barHeight)
+        	    .on("mouseover", function() { mouseCheck  = 1;})
+        		.on("mouseout", function() { mouseCheck = 0;})
+        		.on("mousemove", function(d, i) {
+        		    if(mouseCheck == 0)
+        		        return;
+        		        
+                    div.transition()
+        				.duration(500)
+        				.style("opacity", 0);
+        			div.transition()
+        				.duration(200)
+        				.style("opacity", .9);
+        			div	.html("score: " + dataScore[i] + "</br>" + dataDate[i].substr(8))
+        				.style("left", (d3.event.pageX) + "px")
+        				.style("top", (d3.event.pageY - 28) + "px");
+        			});
+
+
             var barLabelGroup = svg.append("g")
                 .attr("transform", translateText)
                 .attr("class", "bar-label");
@@ -92,4 +129,3 @@
 </html>
 
 <!--<link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />-->
-
