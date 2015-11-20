@@ -35,6 +35,11 @@ def get_name(request):
     if request.method == 'POST':
         pk = request.POST['answer']
         
+        matchedList = History.objects.filter(text=pk)
+        if len(matchedList) > 0:
+            print('matchedList: ', matchedList[0].updateDate)
+            return HttpResponseRedirect('play')
+        
         if not dd.isExist(pk):
             print(pk, ' is not a word !!!')
         
