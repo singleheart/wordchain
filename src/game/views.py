@@ -20,7 +20,7 @@ class PlayView(generic.ListView):
     context_object_name = 'History'
 
     def get_queryset(self):
-        return History.objects.order_by('updateDate')
+        return History.objects.order_by('-updateDate')[0:10]
 
 class ScoreView(generic.ListView):
     template_name = 'game/scoreboard.html'
