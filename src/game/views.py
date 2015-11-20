@@ -4,6 +4,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 import datetime
 
+from .myDictionary import MyDictionary, dd
 from .models import History, Score
 
 # Create your views here.
@@ -33,6 +34,11 @@ def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         pk = request.POST['answer']
+        
+        if not dd.isExist(pk):
+            print(pk, ' is not a word !!!')
+        
+        # db write
         p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now()))
         p.save()
 
