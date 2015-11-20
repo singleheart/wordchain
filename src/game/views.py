@@ -33,18 +33,18 @@ class ScoreView(generic.ListView):
 def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        pk = request.POST['answer']
+        answer = request.POST['answer']
         
-        matchedList = History.objects.filter(text=pk)
+        matchedList = History.objects.filter(text=answer)
         if len(matchedList) > 0:
             print('matchedList: ', matchedList[0].updateDate)
             return HttpResponseRedirect('play')
         
-        if not dd.isExist(pk):
-            print(pk, ' is not a word !!!')
+        if not dd.isExist(answer):
+            answer += " (nonword)"
         
         # db write
-        p = History(text=pk, userId=request.user, updateDate= str(datetime.datetime.now()))
+        p = History(text=answer, userId=request.user, updateDate= str(datetime.datetime.now()))
         p.save()
 
         return HttpResponseRedirect('play')
