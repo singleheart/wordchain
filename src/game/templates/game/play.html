@@ -5,9 +5,16 @@
         <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
     </head>
     <body>
-        {% for history in History.all %}
-            <p>{{ history.text }} {{ history.userId }} {{ history.updateDate|date:'Y-m-d H:i:s' }}</p>
-        {% endfor %}
+        <!--http://www.html.am/html-codes/scrollboxes/scrollbox-border.cfm-->
+        
+        <table style="width:500px;overflow:scroll;padding:5px;border:6px double #DEBB07;">
+            {% for history in History.all %}
+            <tr>
+                <td style="color:hsl(240,100%,50%);">{{ history.text }}</td> <td>{{ history.userId }}</td> <td>{{ history.updateDate|date:'Y-m-d H:i:s' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
         <form method="post" action="{% url 'game:form' %}">
             {% csrf_token %}
             <input type="text" name="answer"/>
@@ -15,5 +22,6 @@
         </form>
     </body>
 </html>
+
 
 
