@@ -6,9 +6,15 @@
     </head>
     <body>
         <!--http://www.html.am/html-codes/scrollboxes/scrollbox-border.cfm-->
+        {% if History.errWord %}
+        <script>
+            alert("{{ History.errWord }} , {{ History.errType }}")
+        </script>
+        {% else %}
+        {% endif %}
         
         <table style="width:500px;overflow:scroll;padding:5px;border:6px double #DEBB07;">
-            {% for history in History.all reversed %}
+            {% for history in History.obj.all reversed %}
             <tr>
                 <td style="color:hsl(240,100%,50%);">{{ history.text }}</td> <td>{{ history.userId }}</td> <td>{{ history.updateDate|date:'Y-m-d H:i:s' }}</td>
             </tr>
@@ -20,6 +26,8 @@
             <input type="text" name="answer"/>
             <input type="submit" name="Submit"/>
         </form>
+        
+        <h2><a href="{% url 'game:index' %}">Go To Main Page</a></h2>
     </body>
 </html>
 
