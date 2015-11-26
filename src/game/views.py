@@ -31,11 +31,7 @@ class PlayView(generic.ListView):
         errWord = self.request.GET.get('errWord')
         errType = self.request.GET.get('errType')
         print('request: ', errWord, ", ", errType)
-        
-        if(errWord is None):
-            return {'obj':History.objects.order_by('-updateDate')[0:10]}
-        else:
-            return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType}
+        return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType}
 
 class ScoreView(generic.ListView):
     template_name = 'game/scoreboard.html'
