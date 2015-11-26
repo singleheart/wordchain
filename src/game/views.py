@@ -46,13 +46,15 @@ def get_name(request):
         answer = request.POST['answer']
         
         # word chain validation
-        lastWord = History.objects.order_by('-updateDate')[0]
-        lastLetter = lastWord.text[-1]
-        print(lastWord, " : ", lastLetter)
-        
-        if lastLetter != answer[0]:
-            # print('letterMissMatch: ', lastLetter, ", ", answer)
-            return HttpResponseRedirect('play?errWord='+ answer +'&errType='+'letterMissMatch')
+        lastWords = History.objects.order_by('-updateDate')
+        if len(lastWords) > 0:
+            lastWord = lastWords[0]
+            lastLetter = lastWord.text[-1]
+            # print(lastWord, " : ", lastLetter)
+            
+            if lastLetter != answer[0]:
+                # print('letterMissMatch: ', lastLetter, ", ", answer)
+                return HttpResponseRedirect('play?errWord='+ answer +'&errType='+'letterMissMatch')
         
         matchedList = History.objects.filter(text=answer)
         if len(matchedList) > 0:
