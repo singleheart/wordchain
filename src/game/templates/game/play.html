@@ -6,12 +6,6 @@
     </head>
     <body>
         <!--http://www.html.am/html-codes/scrollboxes/scrollbox-border.cfm-->
-        {% if History.errWord %}
-        <script>
-            alert("{{ History.errWord }} , {{ History.errType }}")
-        </script>
-        {% else %}
-        {% endif %}
         
         <table style="width:500px;overflow:scroll;padding:5px;border:6px double #DEBB07;">
             {% for history in History.obj.all reversed %}
@@ -23,7 +17,13 @@
         
         <form method="post" action="{% url 'game:form' %}">
             {% csrf_token %}
-            <input type="text" name="answer"/>
+            <input type="text" name="answer"
+        
+        {% if History.errWord %}
+            placeholder="{{ History.errWord }} , {{ History.errType }}")
+        {% endif %}
+             />
+             
             <input type="submit" name="Submit"/>
         </form>
         
