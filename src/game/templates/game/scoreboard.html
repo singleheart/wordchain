@@ -92,7 +92,7 @@
                 .enter().append("rect")
                 .attr("x",0)
                 .attr("y", function(d,i) {return i*barSpacing})
-                .attr("width", function(d) {return d})
+                .attr("width", 0)
                 .attr("height", barHeight)
         	    .on("mouseover", function() {
         	        mouseCheck  = 1;
@@ -115,6 +115,9 @@
         				.style("top", (d3.event.pageY - 28) + "px");
         			});
 
+            barGroup.selectAll("rect").data(dataScore)
+                .transition().duration(500)
+                .attr("width", function(d) {return d});
 
             var barLabelGroup = svg.append("g")
                 .attr("transform", translateText)
