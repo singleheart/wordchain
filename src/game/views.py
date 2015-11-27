@@ -8,6 +8,7 @@ import datetime
 
 from .myDictionary import MyDictionary, dd
 from .models import History, Score
+from django.db.models import F
 
 # Create your views here.
 
@@ -45,7 +46,7 @@ def get_name(request):
     if request.method == 'POST':
         answer = request.POST['answer']
         
-        # word chain validation
+        # word chain validation check
         lastWords = History.objects.order_by('-updateDate')
         if len(lastWords) > 0:
             lastWord = lastWords[0]
@@ -68,8 +69,19 @@ def get_name(request):
         # db write
         p = History(text=answer, userId=request.user, updateDate= str(datetime.datetime.now()))
         p.save()
+        
+        # score update
+        scores = Score.objects.filter(userId = request.user)
+        if len(scores) <= 0:
+            score = Score(score=1, userId=request.user, updateDate= str(datetime.datetime.now()))
+            score.save()
+        else:
+            score = scores[0]
+            score.score = F('score') +1
+            score.updateDate = str(datetime.datetime.now())
+            score.save()
 
-        return HttpResponseRedirect('play', {'word':'HAHA'})
+        return HttpResponseRedirect('play')
         
     # if a GET (or any other method) we'll create a blank form
     else:
