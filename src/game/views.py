@@ -46,6 +46,9 @@ def get_name(request):
     if request.method == 'POST':
         answer = request.POST['answer']
         
+        if len(answer) <= 0:
+            return HttpResponseRedirect('play?errWord='+ ' ' +'&errType='+'Empty')
+        
         # word chain validation check
         lastWords = History.objects.order_by('-updateDate')
         if len(lastWords) > 0:
