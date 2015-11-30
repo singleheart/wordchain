@@ -1,19 +1,102 @@
 {% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
 
-<link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+        <!--http://threejs.org/docs/index.html#Manual/Introduction/Creating_a_scene-->
+        <!--http://stemkoski.github.io/Three.js/#hello-world-->
+        <!--http://jafty.com/blog/tag/three-js-rotate-text-by-center/-->
 
-{% if latest_question_list %}
-	<p>ID {{ user.username }}</p>
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'game:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-    <form method="post" action="{% url 'django.contrib.auth.views.logout' %}">
-    	{% csrf_token %}
-		<input type="submit" value="logout" />    
-	</form>
-{% else %}
-    <h2><a href="{% url 'game:play' %}">Go To Game Page</a></h2>
-    <h2><a href="{% url 'game:score' %}">Show Ranking</a></h2>
-{% endif %}
+        <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />
+        <style type="text/css">
+            canvas { width: 500px; height: 500px }
+        </style>
+    </head>
+
+    <body>
+        <!--<script src="http://threejs.org/build/three.min.js"></script>-->
+        <script src="http://stemkoski.github.io/Three.js/js/Three.js"></script>
+        <script src="http://stemkoski.github.io/Three.js/js/Stats.js"></script>
+        <script src="http://stemkoski.github.io/Three.js/js/Detector.js"></script>
+        <script src="http://stemkoski.github.io/Three.js/js/OrbitControls.js"></script>
+        
+        <script src="http://stemkoski.github.io/Three.js/fonts/helvetiker_bold.typeface.js"></script>
+        <script src="http://stemkoski.github.io/Three.js/fonts/helvetiker_regular.typeface.js"></script>
+
+        <script type="text/javascript">
+            var scene = new THREE.Scene();
+            // var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            var camera = new THREE.PerspectiveCamera( 75, 500/500, 0.1, 1000 );
+
+            // var renderer = new THREE.WebGLRenderer();
+            var renderer = window.WebGLRenderingContext ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer(); // Fallback to canvas renderer, if necessary.
+            // renderer.setSize( window.innerWidth, window.innerHeight);
+            renderer.setSize( 500, 500);
+            document.body.appendChild( renderer.domElement );
+            
+            var pointLight = new THREE.PointLight(0xFFFFFF); // Set the color of the light source (white).
+            pointLight.position.set(50, 50, 50); // Position the light source at (x, y, z).
+            scene.add(pointLight); // Add the light source to the scene.
+
+// 			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+// 			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
+// 			var cube = new THREE.Mesh( geometry, material );
+// 			scene.add( cube );
+
+            var materialFront = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+            var materialSide = new THREE.MeshBasicMaterial( { color: 0x000088 } );
+            var materialArray = [ materialFront, materialSide ];
+			var textGeom = new THREE.TextGeometry( "Word Chain", 
+        	{
+                size: 30, height: 4, curveSegments: 3,
+                font: "helvetiker", weight: "bold", style: "normal",
+                bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                material: 0, extrudeMaterial: 1
+        	});
+        	
+            var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+            
+            textGeom.computeBoundingBox();
+            var textWidth = textGeom.boundingBox.max.x - textGeom.boundingBox.min.x;
+            var textHeight = textGeom.boundingBox.max.y - textGeom.boundingBox.min.y;
+
+            var textMesh = new THREE.Mesh(textGeom, textMaterial );
+            textMesh.position.set( -0.5 * textWidth, -0.5 * textHeight, 0 );
+
+            pivot = new THREE.Object3D();
+            pivot.add( textMesh );
+            scene.add( pivot );
+
+            scene.add(pivot);
+
+			camera.position.z = 200;
+
+			var render = function () {
+				requestAnimationFrame( render );
+
+				// pivot.rotation.x += 0.02;
+				pivot.rotation.y += 0.02;
+
+				renderer.render(scene, camera);
+			};
+
+			render();            
+        </script>        
+
+    {% if latest_question_list %}
+    	<p>ID {{ user.username }}</p>
+        <ul>
+        {% for question in latest_question_list %}
+            <li><a href="{% url 'game:detail' question.id %}">{{ question.question_text }}</a></li>
+        {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'django.contrib.auth.views.logout' %}">
+        	{% csrf_token %}
+    		<input type="submit" value="logout" />    
+    	</form>
+    {% else %}
+        <h2><a href="{% url 'game:play' %}">Go To Game Page</a></h2>
+        <h2><a href="{% url 'game:score' %}">Show Ranking</a></h2>
+    {% endif %}
+    </body>
+</html>
