@@ -5,12 +5,13 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import datetime
+from .gameRule import Game, GameScore
 
 from .myDictionary import MyDictionary, dd
 from .models import History, Score
-from django.db.models import F
 
 # Create your views here.
+
 
 class IndexView(generic.ListView):
     template_name = 'game/index.html'
@@ -19,29 +20,31 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return
 
-class PlayData():
-    def __init__(self, obj, word):
-        self.obj = obj
-        self.word = word
-
-class PlayView(generic.ListView):
-    template_name = 'game/play.html'
-    context_object_name = 'History'
-
-    def get_queryset(self):
-        errWord = self.request.GET.get('errWord')
-        errType = self.request.GET.get('errType')
-        print('request: ', errWord, ", ", errType)
-        return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType}
-
 class ScoreView(generic.ListView):
     template_name = 'game/scoreboard.html'
     context_object_name = 'Score'
     
     def get_queryset(self):
         return Score.objects.order_by('-score')
+
     
+gameScore = GameScore()
+
+class PlayView(generic.ListView):
+    template_name = 'game/play.html'
+    context_object_name = 'History'
+
+    def get_queryset(self):
+        gameScore.init(self.request.user)
+        
+        errWord = self.request.GET.get('errWord')
+        errType = self.request.GET.get('errType')
+        print('request: ', errWord, ", ", errType)
+        return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType}
+
 def get_name(request):
+    gameScore.init(request.user)
+        
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         answer = request.POST['answer']
@@ -58,15 +61,18 @@ def get_name(request):
             
             if lastLetter != answer[0]:
                 # print('letterMissMatch: ', lastLetter, ", ", answer)
+                gameScore.update(request.user, gameScore.PENALTY_LASTLETTERMISSMATCH)
                 return HttpResponseRedirect('play?errWord='+ answer +'&errType='+'letterMissMatch')
         
         matchedList = History.objects.filter(text=answer)
         if len(matchedList) > 0:
             # print('matchedList: ', matchedList[0].updateDate)
+            gameScore.update(request.user, gameScore.PENALTY_ALREADYEXIST)
             return HttpResponseRedirect('play?errWord='+answer+'&errType='+'AlreadyExist')
 
         if not dd.isExist(answer):
             # print('NotInDic: ', answer)
+            gameScore.update(request.user, gameScore.PENALTY_NOTINDIC)
             return HttpResponseRedirect('play?errWord='+answer+'&errType='+'NotInDic')
 
         # db write
@@ -74,15 +80,7 @@ def get_name(request):
         p.save()
         
         # score update
-        scores = Score.objects.filter(userId = request.user)
-        if len(scores) <= 0:
-            score = Score(score=1, userId=request.user, updateDate= str(datetime.datetime.now()))
-            score.save()
-        else:
-            score = scores[0]
-            score.score = F('score') +1
-            score.updateDate = str(datetime.datetime.now())
-            score.save()
+        gameScore.update(request.user, gameScore.ADD_CORRECT)
 
         return HttpResponseRedirect('play')
         
