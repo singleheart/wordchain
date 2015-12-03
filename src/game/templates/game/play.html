@@ -33,17 +33,21 @@
             {% endfor %}
         </table>
         
-        <form method="post" action="{% url 'game:form' %}">
-            {% csrf_token %}
-            <input type="text" name="answer"
-        
-        {% if History.errWord %}
-            placeholder="{{ History.errWord }} , {{ History.errType }}")
+        {% if History.inNormalMode %}
+            <form method="post" action="{% url 'game:form' %}">
+                {% csrf_token %}
+                <input type="text" name="answer"
+            
+            {% if History.errWord %}
+                placeholder="{{ History.errWord }} , {{ History.errType }}")
+            {% endif %}
+                 autofocus />
+                 
+                <input type="submit" name="Submit"/>
+            </form>
+        {% else %}
+            <h2 style="color:red;">You are in Observer mode !!!</h2>
         {% endif %}
-             autofocus />
-             
-            <input type="submit" name="Submit"/>
-        </form>
         
         <h2><a href="{% url 'game:index' %}">Go To Main Page</a></h2>
     </body>

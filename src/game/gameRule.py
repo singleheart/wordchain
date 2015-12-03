@@ -12,7 +12,19 @@ class Game:
         History.objects.all().delete()
         Score.objects.all().delete()
 
-    def isEnd(self, word):
+    def isEnd(self):
+        scores = Score.objects.all()
+        if len(scores) <=1:
+            return False
+        
+        scores = Score.objects.filter(score__gt=0)
+        if len(scores) <= 1:
+            return  True
+        
+        return False
+        
+
+    def isNoMoreWord(self, word):
         # not in dic
         if not dd.isExistStartLetter(word[0]):
             return True
@@ -21,10 +33,19 @@ class Game:
         words = dd.getSubWord(word[0])
         for word in words:
             matchedList = History.objects.filter(text=word)
-            if len(matchedList) <= 0
+            if len(matchedList) <= 0:
                 return False
         
         return True
+
+    def isObserverMode(self, userName):
+        scores = Score.objects.filter(userId = userName)
+        if len(scores) > 0:
+            score = scores[0]
+            if score.score <= 0:
+                return True
+                
+        return False
 
 class GameScore:
     INIT_SCORE = 100

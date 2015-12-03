@@ -27,7 +27,7 @@ class ScoreView(generic.ListView):
     def get_queryset(self):
         return Score.objects.order_by('-score')
 
-    
+gameRule = Game()
 gameScore = GameScore()
 
 class PlayView(generic.ListView):
@@ -40,7 +40,11 @@ class PlayView(generic.ListView):
         errWord = self.request.GET.get('errWord')
         errType = self.request.GET.get('errType')
         print('request: ', errWord, ", ", errType)
-        return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType}
+        
+        if gameRule.isObserverMode(self.request.user):
+            return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType, 'inObserverMode':True}
+        else:
+            return {'obj':History.objects.order_by('-updateDate')[0:10], 'errWord':errWord, 'errType':errType, 'inNormalMode':True}
 
 def get_name(request):
     gameScore.init(request.user)
