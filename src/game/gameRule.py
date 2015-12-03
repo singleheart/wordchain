@@ -1,5 +1,6 @@
 from .models import History, Score
 from django.db.models import F
+from .myDictionary import MyDictionary, dd
 import datetime
 
 
@@ -11,6 +12,19 @@ class Game:
         History.objects.all().delete()
         Score.objects.all().delete()
 
+    def isEnd(self, word):
+        # not in dic
+        if not dd.isExistStartLetter(word[0]):
+            return True
+            
+        # in dic, but in history
+        words = dd.getSubWord(word[0])
+        for word in words:
+            matchedList = History.objects.filter(text=word)
+            if len(matchedList) <= 0
+                return False
+        
+        return True
 
 class GameScore:
     INIT_SCORE = 100

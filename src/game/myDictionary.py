@@ -44,6 +44,16 @@ class MyDictionary():
         else:
             return False
     
+    def isExistStartLetter(self, letter):
+        self.loadDic()
+
+        if letter in self.dic:
+            return True
+        else:
+            return False
+    
+    def getSubWord(self, letter):
+        return self.dic[letter]
 
 dd = MyDictionary()
 
