@@ -26,7 +26,7 @@ class Game:
 
     def isNoMoreWord(self, word):
         # not in dic
-        if not dd.isExistStartLetter(word[0]):
+        if not dd.isExistStartLetter(word[-1]):
             return True
             
         # in dic, but in history
