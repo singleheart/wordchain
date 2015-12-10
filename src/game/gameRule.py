@@ -12,18 +12,6 @@ class Game:
         History.objects.all().delete()
         Score.objects.all().delete()
 
-    def isEnd(self):
-        scores = Score.objects.all()
-        if len(scores) <=1:
-            return False
-        
-        scores = Score.objects.filter(score__gt=0)
-        if len(scores) <= 1:
-            return  True
-        
-        return False
-        
-
     def isNoMoreWord(self, word):
         # not in dic
         if not dd.isExistStartLetter(word[-1]):
@@ -63,6 +51,21 @@ class GameScore:
             score = Score(score=GameScore.INIT_SCORE, userId=userName, updateDate= str(datetime.datetime.now()))
             score.save()
             
+    def getWinnerByScore(self):
+        scores = Score.objects.all()
+        if len(scores) <=1:
+            return None
+        
+        scores = Score.objects.filter(score__gt=0)
+        if len(scores) == 1:
+            return  scores[0].userId
+        
+        return None
+
+    def restart(self):
+        History.objects.all().delete()
+        Score.objects.all().delete()
+        
     def update(self, userName, scoreDelta):
         scores = Score.objects.filter(userId = userName)
 
@@ -70,5 +73,19 @@ class GameScore:
         score.score = F('score') + scoreDelta
         score.updateDate = str(datetime.datetime.now())
         score.save()
-    
-    
+        
+        # if score is negative value,
+        # check the result
+        scores = Score.objects.filter(userId = userName)
+        score = scores[0]
+        
+        if score.score <= 0:
+            winner = self.getWinnerByScore()
+            if winner is not None:
+                print("Winner: ", winner)
+                self.restart()
+                return False
+            else:
+                print("No winner...")
+                
+        return True

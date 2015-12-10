@@ -65,21 +65,28 @@ def check_rule(request):
             
             if lastLetter != answer[0]:
                 # print('letterMissMatch: ', lastLetter, ", ", answer)
-                gameScore.update(request.user, gameScore.PENALTY_LASTLETTERMISSMATCH)
-                return HttpResponseRedirect('play?errWord='+ answer +'&errType='+'letterMissMatch')
+                if gameScore.update(request.user, gameScore.PENALTY_LASTLETTERMISSMATCH):
+                    return HttpResponseRedirect('play?errWord='+ answer +'&errType='+'letterMissMatch')
+                else:
+                    return HttpResponseRedirect('play')
         
         matchedList = History.objects.filter(text=answer)
         if len(matchedList) > 0:
             # print('matchedList: ', matchedList[0].updateDate)
-            gameScore.update(request.user, gameScore.PENALTY_ALREADYEXIST)
-            return HttpResponseRedirect('play?errWord='+answer+'&errType='+'AlreadyExist')
+            if gameScore.update(request.user, gameScore.PENALTY_ALREADYEXIST):
+                return HttpResponseRedirect('play?errWord='+answer+'&errType='+'AlreadyExist')
+            else:
+                return HttpResponseRedirect('play')
 
         if not dd.isExist(answer):
             # print('NotInDic: ', answer)
-            gameScore.update(request.user, gameScore.PENALTY_NOTINDIC)
-            return HttpResponseRedirect('play?errWord='+answer+'&errType='+'NotInDic')
+            if gameScore.update(request.user, gameScore.PENALTY_NOTINDIC):
+                return HttpResponseRedirect('play?errWord='+answer+'&errType='+'NotInDic')
+            else:
+                return HttpResponseRedirect('play')
 
         if gameRule.isNoMoreWord(answer):
+            print(request.user)
             gameRule.restart()
             return HttpResponseRedirect('play')
 
