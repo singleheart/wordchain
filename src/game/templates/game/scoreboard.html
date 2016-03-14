@@ -1,0 +1,139 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body {
+                font-family: Helvetica;
+            }
+            svg {
+                width: 500px;
+                height: 500px;
+            }
+            .top-level {
+                font-size: 13px;
+                font-style: italic;
+                text-transform: uppercase;
+                float: left;
+            }
+            .age-lebel {
+                text-align: right;
+                font-weight: bold;
+                width: 90px;
+                padding-right: 10px;
+            }
+            .clearfix {
+                clear: both;
+            }
+            .bar {
+                fill: DarkSlateBlue;
+            }
+            .bar-label {
+                text-anchor: end;
+            }
+            .axis-label {
+                text-anchor: middle;
+                font-size: 13px;
+            }
+            
+            div.tooltip {
+              position: absolute;	
+              text-align: center;	
+              width: 100px;	
+              height: 28px;		
+              padding: 2px;	
+              font: 12px sans-serif;	
+              background: lightsteelblue;	
+              border: 0px;					
+              border-radius: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        
+        <script>
+            var dataName = [{% for score in Score.all %} "{{ score.userId }}", {% endfor %}];
+            var dataScore = [{% for score in Score.all %} {{ score.score }}, {% endfor %}];
+            var dataDate = [{% for score in Score.all %} "{{ score.updateDate }}", {% endfor %}];
+            // var dataText = [{% for score in Score.all %} "{{ score.userId }} : {{ score.updateDate }}", {% endfor %}];
+            
+            var width = 400,
+                leftMargin = 100,
+                topMargin = 30,
+                barHeight = 20,
+                barGap = 20,
+                tickGap = 5,
+                tickHeight = 10,
+                barSpacing = barHeight + barGap,
+                scaleFactor = width / Math.max(...dataScore),
+                translateText = "translate(" + leftMargin + "," + topMargin + ")",
+                scaleText = "scale(" + scaleFactor + ",1)";
+        
+            var ulBody = d3.select("body");
+            ulBody.append("h2").text("-- SCORE --");
+            
+            // http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
+            // Define 'div' for tooltips
+            var div = d3.select("body")
+            	.append("div")  // declare the tooltip div 
+            	.attr("class", "tooltip")              // apply the 'tooltip' class
+            	.style("opacity", 0);                  // set the opacity to nil
+            
+            var svg = ulBody.append("svg");
+            var barGroup = svg.append("g")
+                .attr("transform", translateText + " " + scaleText)
+                .attr("class", "bar");
+                
+            var mouseCheck = 0;
+            
+            barGroup.selectAll("rect").data(dataScore)
+                .enter().append("rect")
+                .attr("x",0)
+                .attr("y", function(d,i) {return i*barSpacing})
+                .attr("width", 0)
+                .attr("height", barHeight)
+        	    .on("mouseover", function() {
+        	        mouseCheck  = 1;
+        			div.transition()
+        				.duration(200)
+        				.style("opacity", .9);
+        	    })
+        		.on("mouseout", function() { 
+        		    mouseCheck = 0;
+                    div.transition()
+        				.duration(500)
+        				.style("opacity", 0);
+        		})
+        		.on("mousemove", function(d, i) {
+        		    if(mouseCheck == 0)
+        		        return;
+        		        
+        			div	.html("score: " + dataScore[i] + "</br>" + dataDate[i].substr(8))
+        				.style("left", (d3.event.pageX) + "px")
+        				.style("top", (d3.event.pageY - 28) + "px");
+        			});
+
+            barGroup.selectAll("rect").data(dataScore)
+                .transition().duration(500)
+                .attr("width", function(d) {return d});
+
+            var barLabelGroup = svg.append("g")
+                .attr("transform", translateText)
+                .attr("class", "bar-label");
+                
+            barLabelGroup.selectAll("text")
+                .data(dataName)
+                .enter().append("text")
+                .attr("x", function(d) {return d*scaleFactor})
+                .attr("y", function(d,i) {return i*barSpacing - 5})
+                .text(function(d) {return d});
+                
+        </script>
+        
+        <h2><a href="{% url 'game:index' %}">Go To Main Page</a></h2>
+    </body>
+</html>
+
+<!--<link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}" />-->

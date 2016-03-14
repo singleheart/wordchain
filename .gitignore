@@ -1,0 +1,5 @@
+.project
+.pydevproject
+src/db.sqlite3
+src/wordchain/__pycache__
+src/game/migrations
