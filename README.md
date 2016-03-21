@@ -1,8 +1,9 @@
 # wordchain
 A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
 
+##### This instruction is written for user who use ubuntu environment (or cloud9 ide)
 
-### This instruction is written for user who use ubuntu environment (or cloud9 ide)
+# Prerequisite
 #### Install framework and modules for project
 ##### 1. django should be installed on python version 3.x
   * sudo pip3 install django
