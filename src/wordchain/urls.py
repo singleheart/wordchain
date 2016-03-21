@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 
 from decorator_include import decorator_include
 
-from . import views
+from game import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
