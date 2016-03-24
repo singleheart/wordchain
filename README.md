@@ -22,6 +22,12 @@ A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
 ##### 2. migrate migrations into database
   * python3 manage.py migrate
 
+#### Create super user for admin (and for first player)
+##### 1. use manager option 'createsuperuser'
+  * python3 manage.py createsuperuser
+
+##### 2. follow instruction to create admin user
+
 #### Run server for project
 ##### 1. try starting server (on_your_workspace/src)
   * python3 manage.py runserver 0.0.0.0:8080
