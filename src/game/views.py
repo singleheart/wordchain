@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 import datetime
 from .gameRule import Game, GameScore
 
-from .myDictionary import MyDictionary, dd
+from .myDictionary import MyDictionary, myDictionary
 from .models import History, Score
 
 # Create your views here.
@@ -74,7 +74,7 @@ def check_rule(request):
             gameScore.update(request.user, gameScore.PENALTY_ALREADYEXIST)
             return HttpResponseRedirect('play?errWord='+answer+'&errType='+'AlreadyExist')
 
-        if not dd.isExist(answer):
+        if not myDictionary.isExist(answer):
             # print('NotInDic: ', answer)
             gameScore.update(request.user, gameScore.PENALTY_NOTINDIC)
             return HttpResponseRedirect('play?errWord='+answer+'&errType='+'NotInDic')
