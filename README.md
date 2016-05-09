@@ -35,5 +35,6 @@ A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
 #### Install PhantomJS for web testing
 ##### 1. install selenium web driver
   * sudo pip3 install selenium
+
 ##### 2. install phantomjs headless testing module
   * sudo npm -g install phnatomjs
