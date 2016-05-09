@@ -31,3 +31,7 @@ A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
 #### Run server for project
 ##### 1. try starting server (on_your_workspace/src)
   * python3 manage.py runserver 0.0.0.0:8080
+
+#### Install PhantomJS for web testing
+##### 1. sudo pip3 install selenium
+##### 2. sudo npm -g install phnatomjs
