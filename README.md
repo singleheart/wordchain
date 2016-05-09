@@ -33,5 +33,7 @@ A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
   * python3 manage.py runserver 0.0.0.0:8080
 
 #### Install PhantomJS for web testing
-##### 1. sudo pip3 install selenium
-##### 2. sudo npm -g install phnatomjs
+##### 1. install selenium web driver
+  * sudo pip3 install selenium
+##### 2. install phantomjs headless testing module
+  * sudo npm -g install phnatomjs
