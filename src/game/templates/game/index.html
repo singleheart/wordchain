@@ -95,8 +95,8 @@
     		<input type="submit" value="logout" />    
     	</form>
     {% else %}
-        <h2><a href="{% url 'game:play' %}">Go To Game Page</a></h2>
-        <h2><a href="{% url 'game:score' %}">Show Ranking</a></h2>
+        <h2><a href="{% url 'game:play' %}" id="gameplay">Go To Game Page</a></h2>
+        <h2><a href="{% url 'game:score' %}" id="gamescore">Show Ranking</a></h2>
     {% endif %}
     </body>
 </html>
