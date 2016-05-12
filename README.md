@@ -37,4 +37,4 @@ A word chain game run on the web. See https://en.wikipedia.org/wiki/Word_chain
   * sudo pip3 install selenium
 
 ##### 2. install phantomjs headless testing module
-  * sudo npm -g install phnatomjs
+  * sudo npm -g install phantomjs
