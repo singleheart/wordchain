@@ -1,11 +1,10 @@
 from selenium import webdriver
 from django.test import TestCase
-import socket
+import os
 
 class FirstTests(TestCase):
     def test_play_with_no_login(self):
-        username, projectname, _ = socket.gethostname().split('-')
-        page_url = "http://" + projectname + "-" + username + ".c9.io/"
+        page_url = "http://" + os.getenv('C9_HOSTNAME') + "/"
         print(page_url)
 
         driver = webdriver.PhantomJS()
