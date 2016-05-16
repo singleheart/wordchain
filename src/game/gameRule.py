@@ -1,6 +1,6 @@
 from .models import History, Score
 from django.db.models import F
-from .myDictionary import MyDictionary, dd
+from .myDictionary import MyDictionary, myDictionary
 import datetime
 
 
@@ -14,11 +14,11 @@ class Game:
 
     def isNoMoreWord(self, word):
         # not in dic
-        if not dd.isExistStartLetter(word[-1]):
+        if not myDictionary.isExistStartLetter(word[-1]):
             return True
             
         # in dic, but in history
-        words = dd.getSubWord(word[0])
+        words = myDictionary.getSubWord(word[0])
         for word in words:
             matchedList = History.objects.filter(text=word)
             if len(matchedList) <= 0:

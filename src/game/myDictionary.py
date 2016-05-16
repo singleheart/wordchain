@@ -55,8 +55,8 @@ class MyDictionary():
     def getSubWord(self, letter):
         return self.dic[letter]
 
-dd = MyDictionary()
+myDictionary = MyDictionary()
 
 if __name__ == '__main__':
-        print(dd.isExist("AIDS"))
-        print(dd.isExist("ADIDAS"))
+        print(myDictionary.isExist("AIDS"))
+        print(myDictionary.isExist("ADIDAS"))
